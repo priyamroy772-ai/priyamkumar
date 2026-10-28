@@ -1,0 +1,6 @@
+{
+  "name": "Priyam Grocery Manager",
+  "description": "Smart grocery management app featuring active shopping checklist, category organization, monthly budget and expense tracking, purchase history, and recently deleted restoration system with local persistence.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}

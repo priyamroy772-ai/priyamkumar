@@ -1,0 +1,57 @@
+{
+  "id": "com.priyam.grocerymanager",
+  "name": "Priyam Grocery Manager",
+  "short_name": "Priyam Grocer",
+  "description": "Smart shopping, budget tracking, and grocery list management with offline support.",
+  "start_url": "/",
+  "scope": "/",
+  "display": "standalone",
+  "orientation": "portrait-primary",
+  "background_color": "#FFFEF8",
+  "theme_color": "#FFD21F",
+  "prefer_related_applications": false,
+  "categories": ["shopping", "productivity", "lifestyle"],
+  "icons": [
+    {
+      "src": "/pwa-192x192.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "any"
+    },
+    {
+      "src": "/pwa-512x512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any"
+    },
+    {
+      "src": "/maskable-icon-512x512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "maskable"
+    }
+  ],
+  "shortcuts": [
+    {
+      "name": "Add Grocery Item",
+      "short_name": "Add Item",
+      "description": "Quickly add a new grocery item to your list",
+      "url": "/?tab=list&action=add",
+      "icons": [{ "src": "/pwa-192x192.png", "sizes": "192x192" }]
+    },
+    {
+      "name": "View Grocery List",
+      "short_name": "Grocery List",
+      "description": "Open your active grocery checklist",
+      "url": "/?tab=list",
+      "icons": [{ "src": "/pwa-192x192.png", "sizes": "192x192" }]
+    },
+    {
+      "name": "Budget & Expenses",
+      "short_name": "Budget",
+      "description": "Check your grocery budget balance",
+      "url": "/?tab=budget",
+      "icons": [{ "src": "/pwa-192x192.png", "sizes": "192x192" }]
+    }
+  ]
+}
