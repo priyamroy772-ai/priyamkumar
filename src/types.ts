@@ -37,6 +37,17 @@ export interface DeletedGroceryItem extends GroceryItem {
   deletedAt: string;
 }
 
+export interface ParsedGroceryCandidate {
+  id: string;
+  name: string;
+  quantity: number;
+  unit: GroceryUnit;
+  price: number;
+  category: GroceryCategory;
+  notes?: string;
+  selected: boolean;
+}
+
 export interface PurchaseRecord {
   id: string;
   itemId?: string;
@@ -56,6 +67,14 @@ export interface UserProfile {
   email: string;
   phone: string;
   avatarUrl?: string;
+  avatarEmoji?: string;
+  city?: string;
+  householdSize?: number;
+  dietaryPreference?: 'All' | 'Vegetarian' | 'Vegan' | 'Eggetarian' | 'Jain';
+  preferredShoppingDay?: string;
+  primaryStore?: string;
+  lowStockAlerts?: boolean;
+  memberSince?: string;
   isSignedIn: boolean;
   authMethod?: 'phone' | 'google' | 'guest' | 'biometric';
 }
@@ -66,6 +85,7 @@ export interface AppSettings {
   user: UserProfile;
   displayMode: 'mobile-frame' | 'responsive';
   showSplashOnFirstVisit: boolean;
+  voiceGreetingEnabled?: boolean;
 }
 
 export type NavigationTab =

@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { GroceryVisual } from './GroceryVisual';
-import { ArrowRight, Sparkles } from 'lucide-react';
+import { ArrowRight, Sparkles, Volume2 } from 'lucide-react';
+import { playPriyamGreeting, preloadPriyamGreeting } from '../utils/priyamVoiceGreeter';
 
 interface SplashScreenProps {
   onComplete: () => void;
@@ -10,11 +11,18 @@ export const SplashScreen: React.FC<SplashScreenProps> = ({ onComplete }) => {
   const [progress, setProgress] = useState(0);
 
   useEffect(() => {
+    // Preload greeting audio and attempt to play sweet voice greeting
+    preloadPriyamGreeting();
+    playPriyamGreeting();
+
     const timer = setInterval(() => {
       setProgress((prev) => {
         if (prev >= 100) {
           clearInterval(timer);
-          setTimeout(onComplete, 400);
+          setTimeout(() => {
+            playPriyamGreeting();
+            onComplete();
+          }, 350);
           return 100;
         }
         return prev + 12;
@@ -102,8 +110,11 @@ export const SplashScreen: React.FC<SplashScreenProps> = ({ onComplete }) => {
           </span>
 
           <button
-            onClick={onComplete}
-            className="mt-4 px-6 py-2.5 rounded-full bg-white text-amber-950 font-bold text-xs shadow-md border border-amber-200 flex items-center gap-2 hover:bg-amber-50 active:scale-95 transition-all"
+            onClick={() => {
+              playPriyamGreeting(true);
+              onComplete();
+            }}
+            className="mt-4 px-6 py-2.5 rounded-full bg-white text-amber-950 font-bold text-xs shadow-md border border-amber-200 flex items-center gap-2 hover:bg-amber-50 active:scale-95 transition-all cursor-pointer"
           >
             <span>Enter App</span>
             <ArrowRight className="w-3.5 h-3.5" />

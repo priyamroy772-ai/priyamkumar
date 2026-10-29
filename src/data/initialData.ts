@@ -15,11 +15,20 @@ export const DEFAULT_SETTINGS: AppSettings = {
     name: 'Priyam Roy',
     email: 'priyamroy772@gmail.com',
     phone: '+91 98765 43210',
-    isSignedIn: false,
+    avatarEmoji: '🛒',
+    city: 'Kolkata, WB',
+    householdSize: 4,
+    dietaryPreference: 'All',
+    preferredShoppingDay: 'Sunday',
+    primaryStore: 'Local Mandi & Supermarket',
+    lowStockAlerts: true,
+    memberSince: 'Oct 2026',
+    isSignedIn: true,
     authMethod: 'phone',
   },
   displayMode: 'mobile-frame',
   showSplashOnFirstVisit: true,
+  voiceGreetingEnabled: true,
 };
 
 export const INITIAL_ACTIVE_ITEMS: GroceryItem[] = [

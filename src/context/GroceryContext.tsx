@@ -16,6 +16,7 @@ import {
   calculateLineTotal,
   CATEGORIES_CONFIG,
 } from '../data/initialData';
+import { autoMatchGrocery, getCategoryFallbackImage } from '../utils/groceryAutoMatcher';
 
 interface Toast {
   id: string;
@@ -65,8 +66,13 @@ interface GroceryContextType {
   isApkModalOpen: boolean;
   setIsApkModalOpen: (open: boolean) => void;
 
+  isQuickAddModalOpen: boolean;
+  setIsQuickAddModalOpen: (open: boolean) => void;
+  openQuickAddModal: () => void;
+
   // CRUD Actions
   addItem: (itemData: Omit<GroceryItem, 'id' | 'createdAt' | 'updatedAt' | 'purchased'>) => void;
+  addBatchItems: (itemsData: Omit<GroceryItem, 'id' | 'createdAt' | 'updatedAt' | 'purchased'>[]) => void;
   updateItem: (id: string, updates: Partial<GroceryItem>) => void;
   deleteItem: (id: string) => void;
   restoreItem: (id: string) => void;
@@ -165,12 +171,17 @@ export const GroceryProvider: React.FC<{ children: React.ReactNode }> = ({ child
   const [isBudgetAlertModalOpen, setIsBudgetAlertModalOpen] = useState<boolean>(false);
   const [isMenuOpen, setIsMenuOpen] = useState<boolean>(false);
   const [isApkModalOpen, setIsApkModalOpen] = useState<boolean>(false);
+  const [isQuickAddModalOpen, setIsQuickAddModalOpen] = useState<boolean>(false);
 
   const [toast, setToast] = useState<Toast | null>(null);
   const [showLoginScreen, setShowLoginScreen] = useState<boolean>(!settings.user.isSignedIn);
 
   const openBudgetAlert = useCallback(() => {
     setIsBudgetAlertModalOpen(true);
+  }, []);
+
+  const openQuickAddModal = useCallback(() => {
+    setIsQuickAddModalOpen(true);
   }, []);
 
   // 2. Local Storage Sync Effects
@@ -277,6 +288,31 @@ export const GroceryProvider: React.FC<{ children: React.ReactNode }> = ({ child
       closeAddEditModal();
     },
     [closeAddEditModal, showToast]
+  );
+
+  const addBatchItems = useCallback(
+    (itemsData: Omit<GroceryItem, 'id' | 'createdAt' | 'updatedAt' | 'purchased'>[]) => {
+      if (!itemsData || itemsData.length === 0) return;
+      const now = new Date().toISOString();
+      const newItems: GroceryItem[] = itemsData.map((itemData, idx) => {
+        const auto = autoMatchGrocery(itemData.name);
+        const resolvedImage =
+          itemData.customImageUrl || auto?.imageUrl || getCategoryFallbackImage(itemData.category);
+        return {
+          ...itemData,
+          id: `item_${Date.now()}_${idx}_${Math.random().toString(36).substring(2, 6)}`,
+          purchased: false,
+          createdAt: now,
+          updatedAt: now,
+          customImageUrl: resolvedImage,
+        };
+      });
+
+      setItems((prev) => [...newItems, ...prev]);
+      showToast(`Added ${newItems.length} items to your grocery list!`, 'success');
+      setIsQuickAddModalOpen(false);
+    },
+    [showToast]
   );
 
   const updateItem = useCallback(
@@ -725,7 +761,11 @@ export const GroceryProvider: React.FC<{ children: React.ReactNode }> = ({ child
         setIsMenuOpen,
         isApkModalOpen,
         setIsApkModalOpen,
+        isQuickAddModalOpen,
+        setIsQuickAddModalOpen,
+        openQuickAddModal,
         addItem,
+        addBatchItems,
         updateItem,
         deleteItem,
         restoreItem,

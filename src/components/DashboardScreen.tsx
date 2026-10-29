@@ -2,6 +2,7 @@ import React from 'react';
 import { useGrocery } from '../context/GroceryContext';
 import { GroceryVisual } from './GroceryVisual';
 import { ShowcaseFooter } from './ShowcaseFooter';
+import { SmartShoppingTips } from './SmartShoppingTips';
 import { formatCurrencyINR, calculateLineTotal } from '../data/initialData';
 import {
   Plus,
@@ -10,6 +11,8 @@ import {
   LayoutGrid,
   BarChart2,
   CheckCircle2,
+  Camera,
+  Sparkles,
 } from 'lucide-react';
 
 /* -------------------------------------------------------------
@@ -318,6 +321,7 @@ export const DashboardScreen: React.FC = () => {
     setActiveTab,
     setIsBudgetModalOpen,
     openBudgetAlert,
+    openQuickAddModal,
     items,
   } = useGrocery();
 
@@ -481,6 +485,32 @@ export const DashboardScreen: React.FC = () => {
         </div>
       </section>
 
+      {/* Professional AI Smart Quick Add Strip */}
+      <div
+        onClick={openQuickAddModal}
+        className="p-3 rounded-2xl bg-gradient-to-r from-amber-500/10 via-[#FFD21F]/20 to-amber-500/10 border border-amber-300/80 shadow-xs flex items-center justify-between hover:border-amber-400 hover:shadow-sm active:scale-98 transition-all cursor-pointer group"
+      >
+        <div className="flex items-center gap-3 min-w-0">
+          <div className="w-9 h-9 rounded-xl bg-slate-950 text-[#FFD21F] flex items-center justify-center shrink-0 shadow-xs group-hover:scale-105 transition-transform">
+            <Camera className="w-4.5 h-4.5 stroke-[2.4]" />
+          </div>
+          <div className="min-w-0">
+            <div className="flex items-center gap-1.5 leading-none">
+              <span className="text-xs font-black text-slate-950 font-display">
+                Scan Receipt & Quick Add
+              </span>
+              <span className="bg-[#FFD21F] text-amber-950 text-[9px] font-black px-1.5 py-0.5 rounded uppercase tracking-wider">
+                AI Vision
+              </span>
+            </div>
+            <p className="text-[11px] font-semibold text-slate-600 mt-0.5 truncate">
+              Snap bill or grocery items to auto-populate list
+            </p>
+          </div>
+        </div>
+        <ChevronRight className="w-4 h-4 text-amber-800 stroke-[2.6] shrink-0 group-hover:translate-x-0.5 transition-transform" />
+      </div>
+
       {/* 3. Quick Actions Header + 2x2 Action Pills matching Reference Screenshot */}
       <section className="space-y-2.5">
         <div className="flex items-center gap-1.5">
@@ -561,7 +591,10 @@ export const DashboardScreen: React.FC = () => {
         </div>
       </section>
 
-      {/* 4. Recent Purchases (compact, clean integration) */}
+      {/* 4. Smart Shopping Tips (Daily rotating grocery & budget tips) */}
+      <SmartShoppingTips />
+
+      {/* 5. Recent Purchases (compact, clean integration) */}
       {recentPurchases.length > 0 && (
         <section className="space-y-2 pt-1">
           <div className="flex items-center justify-between">
@@ -611,11 +644,6 @@ export const DashboardScreen: React.FC = () => {
           </div>
         </section>
       )}
-
-      {/* Signature Priyam Grocery Manager footer */}
-      <div className="pt-1">
-        <ShowcaseFooter />
-      </div>
     </div>
   );
 };

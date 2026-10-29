@@ -14,6 +14,7 @@ import {
   ChevronRight,
   Sparkles,
   Smartphone,
+  User,
 } from 'lucide-react';
 
 export const SideDrawer: React.FC = () => {
@@ -51,7 +52,7 @@ export const SideDrawer: React.FC = () => {
       badge: deletedItems.length > 0 ? deletedItems.length : undefined,
       badgeColor: 'bg-amber-100 text-amber-900',
     },
-    { key: 'settings', label: 'Data & Backup', icon: Database },
+    { key: 'settings', label: 'My Profile & Preferences', icon: User },
   ];
 
   const handleSelectTab = (tab: NavigationTab) => {

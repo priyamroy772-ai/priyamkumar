@@ -20,7 +20,6 @@ import {
   Sparkles,
   CheckCircle2,
   Image as ImageIcon,
-  Mic,
   Wand2,
   RefreshCw,
 } from 'lucide-react';
@@ -52,7 +51,6 @@ export const AddEditItemModal: React.FC = () => {
   const [suggestions, setSuggestions] = useState<ImageSuggestion[]>([]);
   const [aiPrompt, setAiPrompt] = useState<string>('');
   const [showPromptDetails, setShowPromptDetails] = useState<boolean>(false);
-  const [isVoiceListening, setIsVoiceListening] = useState(false);
 
   useEffect(() => {
     if (!isAddEditModalOpen) return;
@@ -152,34 +150,6 @@ export const AddEditItemModal: React.FC = () => {
 
   const handleSelectPreset = (preset: typeof POPULAR_HINDI_PRESETS[0]) => {
     handleNameChange(preset.label);
-  };
-
-  const handleVoiceInputInModal = () => {
-    if (typeof window === 'undefined' || !('SpeechRecognition' in window || 'webkitSpeechRecognition' in window)) {
-      alert('Speech recognition is not supported in this browser.');
-      return;
-    }
-    try {
-      const SpeechRecognition = (window as any).SpeechRecognition || (window as any).webkitSpeechRecognition;
-      const rec = new SpeechRecognition();
-      rec.lang = 'en-IN';
-      rec.continuous = false;
-      rec.interimResults = false;
-
-      rec.onstart = () => setIsVoiceListening(true);
-      rec.onresult = (evt: any) => {
-        const spoken = evt.results[0][0].transcript;
-        if (spoken) {
-          handleNameChange(spoken);
-        }
-        setIsVoiceListening(false);
-      };
-      rec.onerror = () => setIsVoiceListening(false);
-      rec.onend = () => setIsVoiceListening(false);
-      rec.start();
-    } catch {
-      setIsVoiceListening(false);
-    }
   };
 
   if (!isAddEditModalOpen) return null;
@@ -437,26 +407,13 @@ export const AddEditItemModal: React.FC = () => {
                 value={name}
                 onChange={(e) => handleNameChange(e.target.value)}
                 placeholder="e.g. sugar, milk, bread, tomato, oil, चाय..."
-                className={`w-full pl-3.5 pr-10 py-2.5 rounded-xl border ${
+                className={`w-full px-3.5 py-2.5 rounded-xl border ${
                   errors.name
                     ? 'border-rose-400 focus:ring-rose-200'
                     : 'border-slate-200 focus:border-amber-400 focus:ring-amber-200'
                 } text-sm font-medium focus:outline-none focus:ring-2 bg-white text-slate-900 shadow-sm transition-all`}
                 autoFocus={!isEditing}
               />
-              <button
-                type="button"
-                onClick={handleVoiceInputInModal}
-                className={`absolute right-2 top-1/2 -translate-y-1/2 p-1.5 rounded-lg transition-all cursor-pointer ${
-                  isVoiceListening
-                    ? 'bg-rose-500 text-white animate-pulse'
-                    : 'text-amber-800 hover:bg-amber-100/80 active:scale-95'
-                }`}
-                title={isVoiceListening ? 'Listening...' : 'Speak item name (बोलकर लिखें)'}
-                aria-label="Speak item name"
-              >
-                <Mic className="w-4 h-4 stroke-[2.4]" />
-              </button>
             </div>
             {errors.name && (
               <p className="mt-1 text-xs text-rose-500 font-medium flex items-center gap-1">

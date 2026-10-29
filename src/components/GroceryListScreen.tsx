@@ -2,7 +2,6 @@ import React, { useMemo, useState } from 'react';
 import { useGrocery } from '../context/GroceryContext';
 import { GroceryCategory, GroceryItem } from '../types';
 import { GroceryVisual } from './GroceryVisual';
-import { VoiceInputModal } from './VoiceInputModal';
 import { SwipeableGroceryItem } from './SwipeableGroceryItem';
 import { formatCurrencyINR, calculateLineTotal } from '../data/initialData';
 import {
@@ -15,7 +14,7 @@ import {
   X,
   ShoppingBag,
   SlidersHorizontal,
-  Mic,
+  Camera,
 } from 'lucide-react';
 
 export const GroceryListScreen: React.FC = () => {
@@ -27,6 +26,7 @@ export const GroceryListScreen: React.FC = () => {
     setSelectedCategoryFilter,
     openAddModal,
     openEditModal,
+    openQuickAddModal,
     deleteItem,
     togglePurchased,
   } = useGrocery();
@@ -71,16 +71,8 @@ export const GroceryListScreen: React.FC = () => {
     });
   }, [items, selectedCategoryFilter, searchQuery]);
 
-  const [isVoiceModalOpen, setIsVoiceModalOpen] = useState(false);
-
   return (
     <div className="space-y-3.5 pb-20 relative">
-      {/* Voice Recognition Modal */}
-      <VoiceInputModal
-        isOpen={isVoiceModalOpen}
-        onClose={() => setIsVoiceModalOpen(false)}
-      />
-
       {/* Title & Search Bar matching Phone 4 */}
       <div className="space-y-3">
         <div className="flex items-center justify-between px-1">
@@ -102,7 +94,7 @@ export const GroceryListScreen: React.FC = () => {
           </button>
         </div>
 
-        {/* Search & Voice-to-Text Input Row */}
+        {/* Search & Quick Add Camera Toolbar */}
         <div className="flex items-center gap-2">
           <div className="relative flex-1">
             <Search className="w-4 h-4 text-slate-400 absolute left-3.5 top-1/2 -translate-y-1/2 pointer-events-none" />
@@ -124,18 +116,18 @@ export const GroceryListScreen: React.FC = () => {
             )}
           </div>
 
-          {/* Voice-to-Text Quick Add Button */}
+          {/* Quick Add with Camera & Receipt Parsing Button */}
           <button
             type="button"
-            onClick={() => setIsVoiceModalOpen(true)}
-            className="h-10 px-3 sm:px-3.5 rounded-2xl bg-gradient-to-r from-amber-400 to-[#FFD21F] hover:brightness-105 active:scale-95 text-amber-950 flex items-center gap-1.5 shadow-sm border border-amber-300 font-extrabold text-xs shrink-0 cursor-pointer transition-all group"
-            title="Voice to Add Item (बोलकर सामान जोड़ें)"
-            aria-label="Speak to add item"
+            onClick={openQuickAddModal}
+            className="h-10 px-3.5 sm:px-4 rounded-2xl bg-gradient-to-r from-amber-400 via-[#FFD21F] to-[#F5AE00] hover:brightness-105 active:scale-95 text-slate-950 flex items-center gap-1.5 shadow-sm border border-amber-300 font-extrabold text-xs shrink-0 cursor-pointer transition-all group"
+            title="Quick Add with Camera or Receipt Scan"
+            aria-label="Quick Add with Camera"
           >
-            <div className="w-6 h-6 rounded-full bg-white/50 flex items-center justify-center group-hover:scale-110 transition-transform">
-              <Mic className="w-3.5 h-3.5 text-amber-950 stroke-[2.5]" />
+            <div className="w-6 h-6 rounded-full bg-slate-950 text-[#FFD21F] flex items-center justify-center group-hover:scale-110 transition-transform">
+              <Camera className="w-3.5 h-3.5 stroke-[2.5]" />
             </div>
-            <span className="font-display font-extrabold text-xs">Voice</span>
+            <span className="font-display font-extrabold text-xs">Quick Add</span>
           </button>
         </div>
 

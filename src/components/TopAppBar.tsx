@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import { useGrocery } from '../context/GroceryContext';
 import {
   Menu,
@@ -7,8 +7,10 @@ import {
   RotateCw,
   User,
   ChevronDown,
+  Volume2,
 } from 'lucide-react';
 import { GroceryVisual } from './GroceryVisual';
+import { playPriyamGreeting, subscribeToVoiceGreeter } from '../utils/priyamVoiceGreeter';
 
 interface TopAppBarProps {
   onBack?: () => void;
@@ -24,6 +26,13 @@ export const TopAppBar: React.FC<TopAppBarProps> = ({
   rightAction,
 }) => {
   const { activeTab, setActiveTab, setIsMenuOpen, showToast, settings } = useGrocery();
+  const [isSpeaking, setIsSpeaking] = useState(false);
+
+  useEffect(() => {
+    return subscribeToVoiceGreeter((speaking) => {
+      setIsSpeaking(speaking);
+    });
+  }, []);
 
   return (
     <header className="sticky top-0 z-30 bg-[#FFFEF8] border-b border-amber-950/[0.04] px-3.5 py-2.5 flex items-center justify-between min-h-[58px] transition-all">
@@ -77,9 +86,27 @@ export const TopAppBar: React.FC<TopAppBarProps> = ({
         )}
       </div>
 
-      {/* Right Icons matching reference screenshot: Bell with notification, Sync, Profile */}
+      {/* Right Icons: Sweet Voice Greeting, Notification Bell, Sync, Profile */}
       <div className="flex items-center gap-1.5">
         {rightAction}
+
+        {/* Sweet Female Voice Greeting Button */}
+        <button
+          type="button"
+          onClick={() => {
+            playPriyamGreeting(true);
+            showToast('Sweet Voice: "Hi Priyam!"', 'info');
+          }}
+          className={`w-8 h-8 rounded-full border shadow-xs flex items-center justify-center transition-all cursor-pointer ${
+            isSpeaking
+              ? 'bg-amber-400 text-amber-950 border-amber-500 ring-2 ring-amber-300 animate-pulse'
+              : 'bg-white border-slate-200/80 text-amber-600 hover:bg-amber-50 active:scale-95'
+          }`}
+          title='Sweet Voice Greeting: "Hi Priyam!"'
+          aria-label='Play Sweet Voice Greeting: "Hi Priyam!"'
+        >
+          <Volume2 className="w-3.5 h-3.5 stroke-[2.3]" />
+        </button>
 
         {/* Notification Bell with red indicator dot */}
         <button
@@ -113,7 +140,11 @@ export const TopAppBar: React.FC<TopAppBarProps> = ({
           aria-label="User Profile"
         >
           <div className="w-5 h-5 rounded-full bg-slate-950 text-white flex items-center justify-center text-[10px] font-bold shrink-0">
-            <User className="w-3 h-3 text-white" />
+            {settings.user.avatarEmoji ? (
+              <span className="text-[11px] leading-none">{settings.user.avatarEmoji}</span>
+            ) : (
+              <User className="w-3 h-3 text-white" />
+            )}
           </div>
           <span className="text-[11px] font-bold text-slate-800 tracking-tight hidden xxs:inline">
             {settings.user.name.split(' ')[0] || 'Priyam'}

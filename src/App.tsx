@@ -15,11 +15,12 @@ import { RestoreModal } from './components/RestoreModal';
 import { PermanentDeleteModal } from './components/PermanentDeleteModal';
 import { BudgetEditModal } from './components/BudgetEditModal';
 import { BudgetAlertModal } from './components/BudgetAlertModal';
+import { QuickAddCameraModal } from './components/QuickAddCameraModal';
 import { SideDrawer } from './components/SideDrawer';
 import { SplashScreen } from './components/SplashScreen';
-import { ShowcaseFooter } from './components/ShowcaseFooter';
 import { ApkInstallModal } from './components/ApkInstallModal';
 import { STORAGE_KEYS } from './data/initialData';
+import { playPriyamGreeting, preloadPriyamGreeting } from './utils/priyamVoiceGreeter';
 import {
   Smartphone,
   Monitor,
@@ -40,6 +41,14 @@ const AppContent: React.FC = () => {
     isApkModalOpen,
     setIsApkModalOpen,
   } = useGrocery();
+
+  // On initial app launch, preload and greet Priyam with a sweet female voice if enabled
+  React.useEffect(() => {
+    preloadPriyamGreeting();
+    if (settings.voiceGreetingEnabled !== false) {
+      playPriyamGreeting();
+    }
+  }, [settings.voiceGreetingEnabled]);
 
   // Show splash on initial load if not dismissed
   const [showSplash, setShowSplash] = useState<boolean>(() => {
@@ -98,7 +107,7 @@ const AppContent: React.FC = () => {
       case 'deleted':
         return 'Recently Deleted';
       case 'settings':
-        return 'Data & Backup';
+        return 'My Profile & Preferences';
       default:
         return undefined;
     }
@@ -142,6 +151,7 @@ const AppContent: React.FC = () => {
       <PermanentDeleteModal />
       <BudgetEditModal />
       <BudgetAlertModal />
+      <QuickAddCameraModal />
       <ApkInstallModal isOpen={isApkModalOpen} onClose={() => setIsApkModalOpen(false)} />
 
       {/* Main Container Layout - Phone format on desktop, native edge-to-edge on mobile */}
